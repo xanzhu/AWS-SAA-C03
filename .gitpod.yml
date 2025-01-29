@@ -1,12 +1,35 @@
 tasks:
   - name: utils
-    before: sudo apt-get install tree
+    before: |
+      sudo apt-get install -y tree
+      sudo apt-get install -y unzip
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
     before: |
       cd /workspace
-      curl "https://awscli.amazonaws.com/awscli-exe-macos-arm64.zip" -o "awscliv2.zip"
+      
+      # Download the ARM64 version of AWS CLI
+      echo "Downloading AWS CLI ARM64 version..."
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-arm64.zip" -o "awscliv2.zip"
+
+      # Verify the download
+      echo "Verifying download..."
+      ls -lh awscliv2.zip  # Check the file size and ensure it looks correct
+      file awscliv2.zip    # Check the file type
+
+      # Unzip the downloaded file
+      echo "Unzipping AWS CLI..."
       unzip awscliv2.zip
+
+      # Install AWS CLI
+      echo "Installing AWS CLI..."
       sudo ./aws/install
+      if [ $? -ne 0 ]; then
+        echo "Error installing AWS CLI"
+        exit 1
+      fi
+
+      # Check installation
+      aws --version
       cd $THEIA_WORKSPACE_ROOT
