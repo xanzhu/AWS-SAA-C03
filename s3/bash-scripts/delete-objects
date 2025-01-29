@@ -12,9 +12,10 @@ fi
 
 BUCKET_NAME=$1
 
-# List objects and process with jq
+# List objects and then delete them! :D 
 aws s3api list-objects-v2 \
     --bucket "$BUCKET_NAME" \
     --region us-east-1 \
     --query "Contents[].Key" \
-    --output json | jq -n '{Objects: [inputs | .[] | {Key: .}]}'
+    --output json | jq -n '{Objects: [inputs | .[] | {Key: .}]}' > /tmp/delete_objects.json
+aws s3api delete-objects --bucket $BUCKET_NAME --delete file:///tmp/delete_objects.json
