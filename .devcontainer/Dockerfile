@@ -10,7 +10,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Download AWS CLI ARM64 version
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-arm64.zip" -o "awscliv2.zip" \
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && sudo ./aws/install \
     && rm -rf awscliv2.zip aws
