@@ -18,6 +18,16 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 # Verify installation of AWS CLI
 RUN aws --version
 
+# Install PowerShell
+RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
+    && sudo dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb \
+    && sudo apt-get update \
+    && sudo apt-get install -y powershell
+
+# Verify installation of PowerShell
+RUN pwsh --version
+
 # Set working directory (you can change this as needed)
 WORKDIR /workspace
 
