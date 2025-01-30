@@ -43,6 +43,14 @@ sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt-get update && \
 sudo apt-get install -y gnupg software-properties-common terraform
 
+# Install Node / NPM 
+RUN  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash /
+nvm install 22
+
+# Install CDK 
+npm install -g aws-cdk
+
+
 # Set working directory (you can change this as needed)
 WORKDIR /workspace
 
