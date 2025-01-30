@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+
 echo "== deploy bucket by CFN"
 
 STACK_NAME="cfn-s3-simple"
