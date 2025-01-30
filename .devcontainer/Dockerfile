@@ -7,15 +7,17 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     curl \
     unzip \
     sudo \
+    gnupg \
+    software-properties-common \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Download AWS CLI ARM64 version
+# Download AWS CLI (ensure correct architecture)
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && sudo ./aws/install \
     && rm -rf awscliv2.zip aws
 
-# Verify installation of AWS CLI
+# Verify AWS CLI installation
 RUN aws --version
 
 # Install PowerShell
@@ -25,33 +27,28 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsof
     && sudo apt-get update \
     && sudo apt-get install -y powershell
 
-# Verify installation of PowerShell
+# Verify PowerShell installation
 RUN pwsh --version
 
-# Install Terraform! 
-# Download and add the HashiCorp GPG key
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | \
-gpg --dearmor | \
-sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+# Install Terraform
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y terraform
 
-# Add the HashiCorp APT repository
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
-sudo tee /etc/apt/sources.list.d/hashicorp.list
+# Verify Terraform installation
+RUN terraform --version
 
-# Install necessary dependencies and Terraform in a single step
-sudo apt-get update && \
-sudo apt-get install -y gnupg software-properties-common terraform
+# Install Node.js and NVM
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
+#     && export NVM_DIR="$HOME/.nvm" \
+#     && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+#     && nvm install 22
 
-# Install Node / NPM 
-RUN  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash /
-nvm install 22
+# # Install AWS CDK
+# RUN npm install -g aws-cdk
 
-# Install CDK 
-npm install -g aws-cdk
-
-
-# Set working directory (you can change this as needed)
+# Set working directory
 WORKDIR /workspace
 
 # Set default environment variable for AWS CLI auto-prompt
