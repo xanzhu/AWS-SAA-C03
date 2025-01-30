@@ -28,6 +28,21 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsof
 # Verify installation of PowerShell
 RUN pwsh --version
 
+# Install Terraform! 
+# Download and add the HashiCorp GPG key
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+
+# Add the HashiCorp APT repository
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+# Install necessary dependencies and Terraform in a single step
+sudo apt-get update && \
+sudo apt-get install -y gnupg software-properties-common terraform
+
 # Set working directory (you can change this as needed)
 WORKDIR /workspace
 
