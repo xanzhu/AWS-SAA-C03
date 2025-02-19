@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Xanzhu - CORS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Grechen+Fuemen&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Xanzhu - CORS test</h1>
+    <p>This is a test page for CORS policy weeewwwwoooo</p>
+    <script type="text/javascript">
+        const xhr = new XMLHttpRequest();
+xhr.open("POST", "https://5lm4tl3lia.execute-api.us-east-1.amazonaws.com/prod/hello", true);
+
+xhr.setRequestHeader("Content-Type", "application/json");
+
+xhr.onreadystatechange = () => {
+  if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    const results = JSON.parse(this.responseText);
+    console.log(results);
+}; 
+}
+xhr.send();
+
+    </script>
+  </body>
+</html>
+<style>
+* {
+  font-family: "Grechen Fuemen", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+</style>
